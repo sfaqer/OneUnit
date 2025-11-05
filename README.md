@@ -680,3 +680,24 @@ $ oneunit execute --debug 2801
 ```
 
 После запуска исполнения тестов VSCode подключится к сеансу отладки и позволит вам отлаживать тесты.
+
+### 2.3 Запуск тестов из линз от BSL Language Server в VSCode
+
+По умолчанию BSL Language Server предоставляет линзы для запуска тестов с помощью фреймворка 1testrunner. Вы можете модифицировать конфигурацию BSL Language Server и указать ему использовать OneUnit.
+
+Ниже пример конфигурационного файла `.bsl-language-server.json`, который позволяет запускать тесты со сбором покрытия в форматах Generic Coverage, OpenTestReport и Cobertura с последующим отображением результатов через плагин Coverage Gutter или Open Test Report Viewer.
+
+```json
+{
+    "codeLens": {
+        "testRunner": {
+            "executable": "oneunit",
+            "executableWin": "oneunit.bat",
+            "getTestsArguments": "d --file %s --mode flat",
+            "runAllTestsArguments": "e --file %s --genericCoverage out/genericCoverage.xml --openTestReport out/otr.xml --cobertura out/cobertura.xml",
+            "runTestArguments": "e --file %s -m %s --genericCoverage out/genericCoverage.xml --openTestReport out/otr.xml --cobertura out/cobertura.xml",
+            "getTestsResultPattern": "^[^.]+\\.([^\\s]+).*$"
+        }
+    }
+}
+```
