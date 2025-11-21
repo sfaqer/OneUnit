@@ -1,0 +1,12 @@
+{
+    "codeLens": {
+        "testRunner": {
+            "executable": "oscript",
+            "executableWin": "oscript",
+            "getTestsArguments": "./src/cli/main.os d --file %s --mode flat",
+            "runAllTestsArguments": " ./src/cli/main.os e --file %s --genericCoverage build/genericCoverage.xml --openTestReport build/otr.xml --cobertura build/cobertura.xml",
+            "runTestArguments": " ./src/cli/main.os e --file %s -m %s --genericCoverage build/genericCoverage.xml --openTestReport build/otr.xml --cobertura build/cobertura.xml",
+            "getTestsResultPattern": "^[^.]+\\.([^\\s]+).*$"
+        }
+    }
+}
