@@ -16,6 +16,7 @@
         .ВключитьФайл("lib.config")
         .ВключитьФайл("LICENSE.md")
         .ВключитьФайл("README.md")
+        .ВключитьФайл("oscript_modules")
 
         .ЗависитОт("1commands", "1.5.0")
         .ЗависитОт("annotations", "1.3.1")
