@@ -729,6 +729,7 @@ $ oneunit execute --debug 2801
 
 ```json
 {
+    "$schema":"https://1c-syntax.github.io/bsl-language-server/configuration/schema.json",
     "codeLens": {
         "testRunner": {
             "executable": "oneunit",
@@ -736,7 +737,8 @@ $ oneunit execute --debug 2801
             "getTestsArguments": "d --file %s --mode flat",
             "runAllTestsArguments": "e --file %s --genericCoverage out/genericCoverage.xml --openTestReport out/otr.xml --cobertura out/cobertura.xml",
             "runTestArguments": "e --file %s -m %s --genericCoverage out/genericCoverage.xml --openTestReport out/otr.xml --cobertura out/cobertura.xml",
-            "getTestsResultPattern": "^[^.]+\\.([^\\s]+).*$"
+            "debugTestArguments": "e --debug 2801 --file %s -m %s",
+            "getTestsResultPattern": "^[^.]+\\.([^\\s.]+).*$"
         }
     }
 }
