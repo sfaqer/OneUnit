@@ -10,5 +10,13 @@
             "debugTestArguments": "./src/cli/main.os e --debug 2801 --file %s -m %s",
             "getTestsResultPattern": "^[^.]+\\.([^\\s.]+).*$"
         }
+    },
+    "inlayHint": {
+        "parameters": {
+            "methodCall": {
+                "showDefaultValues": true,
+                "showParametersWithTheSameName": true
+            }
+        }
     }
 }

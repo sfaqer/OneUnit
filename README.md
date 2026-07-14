@@ -743,3 +743,82 @@ $ oneunit execute --debug 2801
     }
 }
 ```
+
+## 3. Интеграция с ИИ-агентами (MCP)
+
+OneUnit включает MCP-сервер ([Model Context Protocol](https://modelcontextprotocol.io)), позволяющий ИИ-агентам (Claude Code, Cursor, GitHub Copilot и другим MCP-клиентам) обнаруживать и запускать тесты проекта напрямую, без разбора консольного вывода. Сервер построен на библиотеке [autumn-mcp](https://github.com/autumn-library/autumn-mcp) и работает по протоколу stdio.
+
+### 3.1 Подключение
+
+Добавьте OneUnit в конфигурацию MCP-серверов вашего клиента (например, `.mcp.json` для Claude Code или `.cursor/mcp.json` для Cursor).
+
+Linux и macOS:
+
+```json
+{
+    "mcpServers": {
+        "oneunit": {
+            "command": "oneunit",
+            "args": ["mcp"]
+        }
+    }
+}
+```
+
+Windows — обязательно через `cmd /c`: `oneunit` устанавливается как `oneunit.bat`, а MCP-клиенты запускают серверы без командного процессора и не могут исполнить bat-файл напрямую:
+
+```json
+{
+    "mcpServers": {
+        "oneunit": {
+            "command": "cmd",
+            "args": ["/c", "oneunit", "mcp"]
+        }
+    }
+}
+```
+
+Для Claude Code то же самое можно сделать одной командой:
+
+```console
+# Linux и macOS
+claude mcp add oneunit -- oneunit mcp
+
+# Windows
+claude mcp add oneunit -- cmd /c oneunit mcp
+```
+
+Сервер запускается в рабочем каталоге проекта и по умолчанию ищет тесты в `./tests`. Зависимости проекта разрешаются так же, как при запуске из командной строки, включая `oscript.cfg` (см. [раздел 2.1.2](#212-работа-с-зависимостями)).
+
+### 3.2 Инструменты
+
+Сервер предоставляет два инструмента:
+
+| Инструмент | Описание |
+|---|---|
+| `run_tests` | Запускает тесты и возвращает структурированный результат: статистику прогона (`statistics`), проблемы с сообщениями об ошибках и стеками (`problems`), пропущенные тесты с причинами (`skipped_tests`) |
+| `discover_tests` | Обнаруживает тесты без их выполнения и возвращает список полных имён тестов |
+
+Оба инструмента поддерживают параметры фильтрации, аналогичные опциям командной строки: каталоги (`directories`) и файлы (`files`) тестов, поиск в подкаталогах (`recursive`), фильтры по тегам (`tags_include`/`tags_exclude`), наборам (`suites_include`/`suites_exclude`) и методам (`methods_include`/`methods_exclude`), а `run_tests` дополнительно принимает таймаут теста в миллисекундах (`timeout`). Параметр `working_directory` позволяет указать каталог проекта, если он отличается от каталога запуска сервера.
+
+Параметр `coverage` инструмента `run_tests` добавляет в ответ сводку покрытия кода тестами: общий процент (`percent`), количество покрытых и исполняемых строк (`lines_covered`/`lines_total`) и разбивку по файлам с номерами непокрытых строк — файлы отсортированы от наименее покрытых.
+
+Пример результата `run_tests`:
+
+```json
+{
+    "success": false,
+    "exit_code": 1,
+    "statistics": { "total": 4, "passed": 2, "failed": 1, "broken": 1, "skipped": 0, "aborted": 0, "duration_ms": 59 },
+    "problems": [
+        {
+            "status": "failed",
+            "suite": "МойНабор",
+            "test": "МойТест",
+            "message": "[Ожидали, что проверяемое значение (Истина) является ЛОЖЬЮ.]",
+            "details": "Причина:..."
+        }
+    ],
+    "skipped_tests": []
+}
+```
