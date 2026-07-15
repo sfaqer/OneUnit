@@ -8,7 +8,8 @@
             "runAllTestsArguments": "./src/cli/main.os e --file %s --genericCoverage build/genericCoverage.xml --openTestReport build/otr.xml --cobertura build/cobertura.xml",
             "runTestArguments": "./src/cli/main.os e --file %s -m %s --genericCoverage build/genericCoverage.xml --openTestReport build/otr.xml --cobertura build/cobertura.xml",
             "debugTestArguments": "./src/cli/main.os e --debug 2801 --file %s -m %s",
-            "getTestsResultPattern": "^[^.]+\\.([^\\s.]+).*$"
+            "getTestsResultPattern": "^[^.]+\\.([^\\s.]+).*$",
+            "getTestsByTestRunner": true
         }
     },
     "inlayHint": {
