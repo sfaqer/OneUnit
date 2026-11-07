@@ -6,11 +6,14 @@ on:
       - published
   workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   release:
     uses: autumn-library/workflows/.github/workflows/release.yml@main
     with:
       package_mask: "oneunit-*.ospx"
       oscript_version: "2.2.0"
-    secrets:
-      PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
+      trusted_publishing: true
